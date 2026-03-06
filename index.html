@@ -28,7 +28,7 @@
         
         /* Mobile Menu Transitions */
         #mobile-menu { transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
-        #mobile-menu.open { max-height: 800px; opacity: 1; }
+        #mobile-menu.open { max-height: 1000px; opacity: 1; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col hero-gradient">
@@ -46,7 +46,39 @@
                 <a href="https://discord.gg/rnaRKNgCjB" target="_blank" class="text-indigo-400 hover:text-indigo-300 transition-colors">Join Our Discord</a>
                 <span class="text-white/20">|</span>
                 <a href="https://vpinhub.github.io/competitioncentral/index.html" class="text-orange-400 hover:text-orange-300 transition-colors">Competition</a>
-                <a href="#" class="text-gray-300 hover:text-emerald-400 transition-colors">Tutorials</a>
+                
+                <div class="relative group py-2">
+                    <button class="text-gray-300 hover:text-emerald-400 flex items-center gap-2 transition-colors focus:outline-none uppercase tracking-widest">
+                        Tutorials <span class="text-[8px]">▼</span>
+                    </button>
+                    <div class="nav-dropdown absolute top-full left-1/2 -translate-x-1/2 mt-1 w-64 glass border border-white/10 rounded-xl shadow-2xl flex flex-col overflow-hidden z-50">
+                        <div class="bg-white/5 px-4 py-2 border-b border-white/10">
+                            <span class="text-[9px] text-gray-500 font-black">GUIDES & TUTORIALS</span>
+                        </div>
+                        <a href="how-to-build-a-vpin-cab.html" class="px-4 py-3 hover:bg-white/10 text-gray-300 hover:text-white border-b border-white/5 flex justify-between items-center transition-colors">
+                            <span>How to Build a VPIN Cab</span> <span class="text-[10px]">↗</span>
+                        </a>
+                        <a href="how-to-update-vpin.html" class="px-4 py-3 hover:bg-white/10 text-gray-300 hover:text-white border-b border-white/5 flex justify-between items-center transition-colors">
+                            <span>How to Update VPIN</span> <span class="text-[10px]">↗</span>
+                        </a>
+                        <a href="how-to-setup-altsound2.html" class="px-4 py-3 hover:bg-white/10 text-gray-300 hover:text-white border-b border-white/5 flex justify-between items-center transition-colors">
+                            <span>How to Setup AltSound2</span> <span class="text-[10px]">↗</span>
+                        </a>
+                        <a href="how-to-play-pinball.html" class="px-4 py-3 hover:bg-white/10 text-gray-300 hover:text-white border-b border-white/5 flex justify-between items-center transition-colors">
+                            <span>How to Play Pinball</span> <span class="text-[10px]">↗</span>
+                        </a>
+                        <a href="how-to-stream-pinball.html" class="px-4 py-3 hover:bg-white/10 text-gray-300 hover:text-white border-b border-white/5 flex justify-between items-center transition-colors">
+                            <span>How to Stream Pinball</span> <span class="text-[10px]">↗</span>
+                        </a>
+                        <a href="vpx-table-tutorials.html" class="px-4 py-3 hover:bg-white/10 text-gray-300 hover:text-white border-b border-white/5 flex justify-between items-center transition-colors">
+                            <span>VPX Table Tutorials</span> <span class="text-[10px]">↗</span>
+                        </a>
+                        <a href="fp-table-tutorials.html" class="px-4 py-3 hover:bg-white/10 text-gray-300 hover:text-white flex justify-between items-center transition-colors">
+                            <span>FP Table Tutorials</span> <span class="text-[10px]">↗</span>
+                        </a>
+                    </div>
+                </div>
+
                 <a href="interviews.html" class="text-gray-300 hover:text-fuchsia-400 transition-colors">Interviews</a>
                 <span class="text-white/20">|</span>
                 <a href="https://vpinhub.github.io/competitioncentral/showcase.html" class="text-gray-300 hover:text-cyan-400 transition-colors">Latest Tables</a>
@@ -89,7 +121,20 @@
         <div id="mobile-menu" class="xl:hidden flex flex-col gap-4 mt-4 pt-4 border-t border-white/10 text-xs font-bold uppercase tracking-widest px-2 pb-2">
             <a href="https://discord.gg/rnaRKNgCjB" target="_blank" class="text-indigo-400 hover:text-indigo-300">Join Our Discord</a>
             <a href="https://vpinhub.github.io/competitioncentral/index.html" class="text-orange-400 hover:text-orange-300">Competition</a>
-            <a href="#" class="text-emerald-400 hover:text-emerald-300">Tutorials</a>
+            
+            <div class="pt-2 pb-2">
+                <span class="text-gray-500 mb-3 block">Tutorials</span>
+                <div class="flex flex-col gap-3 pl-4 border-l-2 border-white/10">
+                    <a href="how-to-build-a-vpin-cab.html" class="text-gray-400 hover:text-white text-[10px]">How to Build a VPIN Cab</a>
+                    <a href="how-to-update-vpin.html" class="text-gray-400 hover:text-white text-[10px]">How to Update VPIN</a>
+                    <a href="how-to-setup-altsound2.html" class="text-gray-400 hover:text-white text-[10px]">How to Setup AltSound2</a>
+                    <a href="how-to-play-pinball.html" class="text-gray-400 hover:text-white text-[10px]">How to Play Pinball</a>
+                    <a href="how-to-stream-pinball.html" class="text-gray-400 hover:text-white text-[10px]">How to Stream Pinball</a>
+                    <a href="vpx-table-tutorials.html" class="text-gray-400 hover:text-white text-[10px]">VPX Table Tutorials</a>
+                    <a href="fp-table-tutorials.html" class="text-gray-400 hover:text-white text-[10px]">FP Table Tutorials</a>
+                </div>
+            </div>
+
             <a href="interviews.html" class="text-fuchsia-400 hover:text-fuchsia-300">Interviews</a>
             <a href="https://vpinhub.github.io/competitioncentral/showcase.html" class="text-cyan-400 hover:text-cyan-300">Latest Tables</a>
             
@@ -127,7 +172,7 @@
                     Search
                 </button>
             </form>
-            </div>
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <a href="https://vpinhub.github.io/competitioncentral/index.html" class="hub-card glass rounded-2xl p-6 border-l-4 border-orange-500 glow-orange flex flex-col justify-between">
