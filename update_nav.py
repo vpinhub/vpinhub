@@ -1,39 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VPINHUB | Virtual Pinball Headquarters</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@400;700;900&family=MedievalSharp&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Encode Sans', sans-serif; background: #020617; color: white; transition: background 0.5s ease; overflow-x: hidden; }
-        .medieval { font-family: 'MedievalSharp', cursive; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
-        .hero-gradient { background: radial-gradient(circle at top, #1e293b 0%, #020617 70%); }
-        
-        .hub-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .hub-card:hover { transform: translateY(-10px) scale(1.02); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
-        
-        .glow-orange { box-shadow: 0 0 20px rgba(249, 115, 22, 0.15); }
-        .glow-fuchsia { box-shadow: 0 0 20px rgba(217, 70, 239, 0.15); }
-        .glow-indigo { box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); }
-        .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.15); }
-        .glow-emerald { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
-        .glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.15); }
+import os
+import re
+import shutil
 
-        /* Dropdown Magic */
-        .nav-dropdown { visibility: hidden; opacity: 0; transform: translateY(10px); transition: all 0.3s ease; }
-        .group:hover .nav-dropdown { visibility: visible; opacity: 1; transform: translateY(0); }
-        
-        /* Mobile Menu Transitions */
-        #mobile-menu { transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
-        #mobile-menu.open { max-height: 1000px; opacity: 1; }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col hero-gradient">
-
-        <nav class="glass border-b border-white/10 p-4 md:p-6 sticky top-0 z-50">
+# The new unified navigation block to insert
+NEW_NAV = """    <nav class="glass border-b border-white/10 p-4 md:p-6 sticky top-0 z-50">
         <div class="container mx-auto flex flex-wrap items-center justify-between gap-4">
 
             <div class="flex items-center gap-4">
@@ -158,105 +128,48 @@
                 </div>
             </div>
         </div>
-    </nav>
+    </nav>"""
 
-    <main class="flex-1 container mx-auto px-6 py-12 max-w-6xl">
-        
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-black italic uppercase mb-4 text-white">Welcome to the Hub</h2>
-            <p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed">
-                Your portal for weekly virtual pinball tournaments, table showcases, creator interviews, and essential community resources.
-            </p>
+# Regex pattern to find the entire <nav>...</nav> block. 
+# re.DOTALL allows the '.' to match newlines so it grabs the whole block.
+nav_pattern = re.compile(r'<nav.*?</nav>', re.IGNORECASE | re.DOTALL)
 
-            <form action="https://vpinhub.github.io/competitioncentral/showcase.html" method="GET" class="relative w-full max-w-2xl mx-auto mt-8">
-                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </div>
-                <input type="text" name="q" placeholder="Search tables, authors, or features..." required
-                       class="w-full glass bg-white/5 text-white placeholder-gray-500 border border-white/10 rounded-full py-4 pl-14 pr-32 focus:outline-none focus:border-cyan-500 focus:bg-white/10 transition-all shadow-[0_4px_10px_rgba(0,0,0,0.3)] focus:shadow-[0_0_20px_rgba(6,182,212,0.25)]">
-                <button type="submit" class="absolute inset-y-2 right-2 bg-cyan-500 hover:bg-cyan-400 text-gray-900 font-bold uppercase tracking-widest text-[10px] md:text-xs px-6 rounded-full transition-all hover:scale-105 shadow-md">
-                    Search
-                </button>
-            </form>
-        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            <a href="https://vpinhub.github.io/competitioncentral/index.html" class="hub-card glass rounded-2xl p-6 border-l-4 border-orange-500 glow-orange flex flex-col justify-between">
-                <div>
-                    <div class="text-3xl mb-4">🏆</div>
-                    <h3 class="text-2xl font-black uppercase italic text-white mb-2">Active Events</h3>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        Enter Special When Lit, Thursday Throwdown, and VPC Competition Corner.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-white/5 text-orange-500 font-bold uppercase text-[10px] tracking-widest flex justify-between">
-                    <span>View Competitions</span><span>→</span>
-                </div>
-            </a>
+def update_html_files():
+    # Get all .html files in the current directory
+    html_files = [f for f in os.listdir('.') if f.endswith('.html')]
 
-            <a href="how-to-build-a-vpin-cab.html" class="hub-card glass rounded-2xl p-6 border-l-4 border-emerald-500 glow-emerald flex flex-col justify-between">
-                <div>
-                    <div class="text-3xl mb-4">🛠️</div>
-                    <h3 class="text-2xl font-black uppercase italic text-white mb-2">Getting Started</h3>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        Start your journey here. Learn how to build your own Virtual Pinball Cabinet and configure your setup.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-white/5 text-emerald-400 font-bold uppercase text-[10px] tracking-widest flex justify-between">
-                    <span>View Guides</span><span>→</span>
-                </div>
-            </a>
+    if not html_files:
+        print("No HTML files found in the current directory.")
+        return
 
-            <a href="https://vpinhub.github.io/competitioncentral/past-competitions.html" class="hub-card glass rounded-2xl p-6 border-l-4 border-indigo-500 glow-indigo flex flex-col justify-between">
-                <div>
-                    <div class="text-3xl mb-4">📜</div>
-                    <h3 class="text-2xl font-black uppercase italic text-white mb-2">Hall of Fame</h3>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        Look back at historical leaderboards, past champions, and legacy achievements.
-                    </p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-white/5 text-indigo-400 font-bold uppercase text-[10px] tracking-widest flex justify-between">
-                    <span>View Archives</span><span>→</span>
-                </div>
-            </a>
-        </div>
+    for filename in html_files:
+        print(f"Processing {filename}...")
 
-        <div class="glass p-8 md:p-12 rounded-3xl border border-indigo-500/30 bg-indigo-900/10 text-center glow-indigo mb-8 relative overflow-hidden">
-            <div class="absolute inset-0 bg-white/5 opacity-10 pointer-events-none"></div>
-            <div class="relative z-10">
-                <h3 class="text-3xl md:text-4xl font-black uppercase italic text-white mb-4">Join the Conversation</h3>
-                <p class="text-gray-300 text-sm md:text-base leading-relaxed max-w-2xl mx-auto mb-8">
-                    Whether you're building your first cabinet, looking for troubleshooting help, organizing events, or just want to discuss the latest VPX releases—our community is the place to be!
-                </p>
-                <a href="https://discord.gg/rnaRKNgCjB" target="_blank" class="inline-flex items-center gap-3 bg-indigo-500 hover:bg-indigo-400 text-white font-black uppercase tracking-widest text-sm px-8 py-4 rounded-full transition-all hover:scale-105 shadow-[0_0_20px_rgba(99,102,241,0.4)]">
-                    <span class="text-xl">💬</span> Join our Discord
-                </a>
-            </div>
-        </div>
+        # Read the contents of the file
+        with open(filename, 'r', encoding='utf-8') as file:
+            content = file.read()
 
-    </main>
+        # Check if a nav tag exists
+        if not nav_pattern.search(content):
+            print(f"  - No <nav> tag found in {filename}. Skipping.")
+            continue
 
-    <footer class="bg-black/40 border-t border-white/5 py-8 mt-auto">
-        <div class="container mx-auto px-6 text-center flex justify-center items-center gap-4">
-            <p class="text-gray-600 text-[10px] font-bold uppercase tracking-widest">
-                © VPINHUB.
-            </p>
-        </div>
-    </footer>
+        # Create a backup of the original file just in case
+        backup_filename = f"{filename}.bak"
+        shutil.copy2(filename, backup_filename)
+        print(f"  - Backup created: {backup_filename}")
 
-    <script>
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+        # Replace the old nav block with the new one
+        updated_content = nav_pattern.sub(NEW_NAV, content)
 
-        menuBtn.addEventListener('click', () => {
-            if (mobileMenu.classList.contains('open')) {
-                mobileMenu.classList.remove('open');
-            } else {
-                mobileMenu.classList.add('open');
-            }
-        });
-    </script>
-</body>
-</html>
+        # Write the updated content back to the file
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write(updated_content)
+
+        print(f"  - Successfully updated navigation in {filename}!")
+
+
+if __name__ == "__main__":
+    update_html_files()
+    print("\nAll done! Check your files to ensure the navigation looks correct.")
